@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<div class="hero is-info">
+    <div class="hero-body">
+        <h1 class="title">Welcome to {{ CITY_NAME }} Vegan Bulletin</h1>
+        <p class="subtitle">Your source for vegan news, events, and resources in {{ CITY_NAME }}, {{ CITY_STATE }}</p>
+    </div>
+</div>
+
+<div class="columns is-multiline mt-5">
+    <!-- News Widget -->
+    <div class="column is-half">
+        <div class="box">
+            <h2 class="title is-4">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-newspaper"></i></span>
+                    <span>Latest News</span>
+                </span>
+            </h2>
+            {% if recent_news %}
+                {% for news in recent_news %}
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong><a href="{% url 'bulletin:news_detail' news.slug %}">{{ news.title }}</a></strong>
+                                <br>
+                                <small>{{ news.published_date|date:"M d, Y" }}</small>
+                                <br>
+                                {{ news.summary|truncatewords:20 }}
+                            </p>
+                        </div>
+                    </div>
+                </article>
+                {% if not forloop.last %}<hr>{% endif %}
+                {% endfor %}
+                <a href="{% url 'bulletin:news_list' %}" class="button is-primary is-fullwidth">View All News</a>
+            {% else %}
+                <p>No news available yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Events Widget -->
+    <div class="column is-half">
+        <div class="box">
+            <h2 class="title is-4">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-calendar"></i></span>
+                    <span>Upcoming Events</span>
+                </span>
+            </h2>
+            {% if upcoming_events %}
+                {% for event in upcoming_events %}
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong><a href="{% url 'bulletin:event_detail' event.slug %}">{{ event.title }}</a></strong>
+                                <br>
+                                <small>
+                                    <span class="icon-text">
+                                        <span class="icon"><i class="fas fa-calendar-day"></i></span>
+                                        <span>{{ event.start_date|date:"M d, Y" }}</span>
+                                    </span>
+                                    {% if event.start_time %}
+                                        <span class="icon-text ml-2">
+                                            <span class="icon"><i class="fas fa-clock"></i></span>
+                                            <span>{{ event.start_time|time:"g:i A" }}</span>
+                                        </span>
+                                    {% endif %}
+                                </small>
+                                <br>
+                                {{ event.summary|truncatewords:15 }}
+                            </p>
+                        </div>
+                    </div>
+                </article>
+                {% if not forloop.last %}<hr>{% endif %}
+                {% endfor %}
+                <a href="{% url 'bulletin:event_list' %}" class="button is-primary is-fullwidth">View All Events</a>
+            {% else %}
+                <p>No upcoming events.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Specials Widget -->
+    <div class="column is-half">
+        <div class="box">
+            <h2 class="title is-4">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-star"></i></span>
+                    <span>Current Specials</span>
+                </span>
+            </h2>
+            {% if active_specials %}
+                {% for special in active_specials %}
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong><a href="{% url 'bulletin:special_detail' special.slug %}">{{ special.title }}</a></strong>
+                                {% if special.organization %}
+                                    <br><small>at {{ special.organization.name }}</small>
+                                {% endif %}
+                                <br>
+                                <small>Until {{ special.end_date|date:"M d, Y" }}</small>
+                                <br>
+                                {{ special.summary|truncatewords:15 }}
+                            </p>
+                        </div>
+                    </div>
+                </article>
+                {% if not forloop.last %}<hr>{% endif %}
+                {% endfor %}
+                <a href="{% url 'bulletin:special_list' %}" class="button is-primary is-fullwidth">View All Specials</a>
+            {% else %}
+                <p>No current specials.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Promotions Widget -->
+    <div class="column is-half">
+        <div class="box">
+            <h2 class="title is-4">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-tag"></i></span>
+                    <span>Active Promotions</span>
+                </span>
+            </h2>
+            {% if active_promotions %}
+                {% for promotion in active_promotions %}
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong><a href="{% url 'bulletin:promotion_detail' promotion.slug %}">{{ promotion.title }}</a></strong>
+                                {% if promotion.organization %}
+                                    <br><small>at {{ promotion.organization.name }}</small>
+                                {% endif %}
+                                <br>
+                                <small>{{ promotion.get_recurrence_type_display }}</small>
+                                <br>
+                                {{ promotion.summary|truncatewords:15 }}
+                            </p>
+                        </div>
+                    </div>
+                </article>
+                {% if not forloop.last %}<hr>{% endif %}
+                {% endfor %}
+                <a href="{% url 'bulletin:promotion_list' %}" class="button is-primary is-fullwidth">View All Promotions</a>
+            {% else %}
+                <p>No active promotions today.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Resources Widget -->
+    <div class="column is-full">
+        <div class="box">
+            <h2 class="title is-4">
+                <span class="icon-text">
+                    <span class="icon"><i class="fas fa-book"></i></span>
+                    <span>Recent Resources</span>
+                </span>
+            </h2>
+            {% if recent_resources %}
+                <div class="columns is-multiline">
+                    {% for resource in recent_resources %}
+                    <div class="column is-one-fifth">
+                        <div class="card">
+                            <div class="card-content">
+                                <p class="title is-6">
+                                    <a href="{% url 'bulletin:resource_detail' resource.slug %}">{{ resource.title }}</a>
+                                </p>
+                                <p class="subtitle is-7">{{ resource.get_resource_type_display }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'bulletin:resource_list' %}" class="button is-primary is-fullwidth">View All Resources</a>
+            {% else %}
+                <p>No resources available yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

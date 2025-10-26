@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ CITY_NAME }} Vegan Bulletin{% endblock %}</title>
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+        <div class="container">
+            <div class="navbar-brand">
+                <a class="navbar-item" href="{% url 'bulletin:home' %}">
+                    <strong>{{ CITY_NAME }} Vegan Bulletin</strong>
+                </a>
+
+                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+            </div>
+
+            <div id="navbarMenu" class="navbar-menu">
+                <div class="navbar-start">
+                    <a class="navbar-item" href="{% url 'bulletin:home' %}">
+                        <span class="icon"><i class="fas fa-home"></i></span>
+                        <span>Home</span>
+                    </a>
+                    <a class="navbar-item" href="{% url 'bulletin:news_list' %}">
+                        <span class="icon"><i class="fas fa-newspaper"></i></span>
+                        <span>News</span>
+                    </a>
+                    <a class="navbar-item" href="{% url 'bulletin:event_list' %}">
+                        <span class="icon"><i class="fas fa-calendar"></i></span>
+                        <span>Events</span>
+                    </a>
+                    <a class="navbar-item" href="{% url 'bulletin:special_list' %}">
+                        <span class="icon"><i class="fas fa-star"></i></span>
+                        <span>Specials</span>
+                    </a>
+                    <a class="navbar-item" href="{% url 'bulletin:promotion_list' %}">
+                        <span class="icon"><i class="fas fa-tag"></i></span>
+                        <span>Promotions</span>
+                    </a>
+                    <a class="navbar-item" href="{% url 'bulletin:resource_list' %}">
+                        <span class="icon"><i class="fas fa-book"></i></span>
+                        <span>Resources</span>
+                    </a>
+                </div>
+
+                <div class="navbar-end">
+                    <a class="navbar-item" href="{% url 'bulletin:about' %}">
+                        About Us
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a class="navbar-item" href="/admin/">
+                        <span class="icon"><i class="fas fa-user-shield"></i></span>
+                        <span>Admin</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="content has-text-centered">
+            <p>
+                <strong>{{ CITY_NAME }} Vegan Bulletin</strong> - Your source for vegan news, events, and resources in {{ CITY_NAME }}, {{ CITY_STATE }}.
+            </p>
+            <p>
+                Contact us: <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for navbar burger -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+            $navbarBurgers.forEach( el => {
+                el.addEventListener('click', () => {
+                    const target = el.dataset.target;
+                    const $target = document.getElementById(target);
+                    el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+                });
+            });
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

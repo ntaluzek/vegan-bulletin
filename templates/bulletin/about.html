@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<div class="box">
+    <h1 class="title">About {{ CITY_NAME }} Vegan Bulletin</h1>
+
+    <div class="content">
+        <p>
+            Welcome to {{ CITY_NAME }} Vegan Bulletin, your comprehensive source for all things vegan in {{ CITY_NAME }}, {{ CITY_STATE }}.
+        </p>
+
+        <h2 class="title is-4">Our Mission</h2>
+        <p>
+            We're dedicated to connecting the vegan community in {{ CITY_NAME }} by aggregating news, events,
+            special offerings, promotions, and resources all in one convenient location. Whether you're a
+            long-time vegan or just starting your plant-based journey, we're here to help you discover
+            everything the {{ CITY_NAME }} vegan scene has to offer.
+        </p>
+
+        <h2 class="title is-4">What We Offer</h2>
+        <div class="columns is-multiline">
+            <div class="column is-half">
+                <div class="box has-background-light">
+                    <h3 class="title is-5">
+                        <span class="icon-text">
+                            <span class="icon has-text-primary"><i class="fas fa-newspaper"></i></span>
+                            <span>News</span>
+                        </span>
+                    </h3>
+                    <p>Stay updated on restaurant openings and closings, new product releases, and local policy updates.</p>
+                </div>
+            </div>
+
+            <div class="column is-half">
+                <div class="box has-background-light">
+                    <h3 class="title is-5">
+                        <span class="icon-text">
+                            <span class="icon has-text-primary"><i class="fas fa-calendar"></i></span>
+                            <span>Events</span>
+                        </span>
+                    </h3>
+                    <p>Discover vegan festivals, popup markets, meetups, and other community gatherings.</p>
+                </div>
+            </div>
+
+            <div class="column is-half">
+                <div class="box has-background-light">
+                    <h3 class="title is-5">
+                        <span class="icon-text">
+                            <span class="icon has-text-primary"><i class="fas fa-star"></i></span>
+                            <span>Specials</span>
+                        </span>
+                    </h3>
+                    <p>Find limited-time menu items, seasonal offerings, and special releases from local businesses.</p>
+                </div>
+            </div>
+
+            <div class="column is-half">
+                <div class="box has-background-light">
+                    <h3 class="title is-5">
+                        <span class="icon-text">
+                            <span class="icon has-text-primary"><i class="fas fa-tag"></i></span>
+                            <span>Promotions</span>
+                        </span>
+                    </h3>
+                    <p>Never miss a deal! Track ongoing sales, daily specials, and promotional offers.</p>
+                </div>
+            </div>
+
+            <div class="column is-full">
+                <div class="box has-background-light">
+                    <h3 class="title is-5">
+                        <span class="icon-text">
+                            <span class="icon has-text-primary"><i class="fas fa-book"></i></span>
+                            <span>Resources</span>
+                        </span>
+                    </h3>
+                    <p>Access curated guides, directories, and information about animal sanctuaries, vegan services, and volunteer opportunities.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="title is-4">Contact Us</h2>
+        <p>
+            Have a tip, suggestion, or want to get your business or event featured? We'd love to hear from you!
+        </p>
+        <p>
+            <strong>Email:</strong> <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

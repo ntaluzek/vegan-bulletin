@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ promotion.title }} - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+        <li><a href="{% url 'bulletin:home' %}">Home</a></li>
+        <li><a href="{% url 'bulletin:promotion_list' %}">Promotions</a></li>
+        <li class="is-active"><a href="#" aria-current="page">{{ promotion.title|truncatewords:5 }}</a></li>
+    </ul>
+</nav>
+
+<div class="box">
+    <h1 class="title">{{ promotion.title }}</h1>
+    <h2 class="subtitle">at {{ promotion.organization.name }}</h2>
+
+    <div class="tags">
+        <span class="tag is-info is-medium">{{ promotion.get_recurrence_type_display }}</span>
+        {% if promotion.start_time and promotion.end_time %}
+            <span class="tag is-medium">{{ promotion.start_time|time:"g:i A" }} - {{ promotion.end_time|time:"g:i A" }}</span>
+        {% endif %}
+    </div>
+
+    <p class="subtitle is-6 mt-3">
+        <span class="icon-text">
+            <span class="icon"><i class="fas fa-calendar"></i></span>
+            <span>Valid from {{ promotion.valid_from|date:"F d, Y" }}</span>
+        </span>
+        {% if promotion.valid_until %}
+            <span class="ml-2">until {{ promotion.valid_until|date:"F d, Y" }}</span>
+        {% else %}
+            <span class="ml-2">(ongoing)</span>
+        {% endif %}
+    </p>
+
+    <!-- Images -->
+    {% if promotion.images.all %}
+    <div class="columns is-multiline mb-4">
+        {% for image in promotion.images.all %}
+        <div class="column is-one-third">
+            <figure class="image">
+                <img src="{{ image.image.url }}" alt="{{ image.alt_text }}">
+                {% if image.caption %}
+                <figcaption class="has-text-centered is-size-7 mt-2">{{ image.caption }}</figcaption>
+                {% endif %}
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="content">
+        {{ promotion.description|linebreaks }}
+    </div>
+
+    <!-- Organization Info -->
+    <div class="box has-background-light">
+        <h3 class="title is-5">{{ promotion.organization.name }}</h3>
+        {% if promotion.organization.address %}
+        <p>
+            <span class="icon-text">
+                <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                <span>{{ promotion.organization.address }}, {{ promotion.organization.city }}, {{ promotion.organization.state }}</span>
+            </span>
+        </p>
+        {% endif %}
+        {% if promotion.organization.website %}
+        <p>
+            <a href="{{ promotion.organization.website }}" target="_blank">Visit Website</a>
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<a href="{% url 'bulletin:promotion_list' %}" class="button is-link">
+    <span class="icon"><i class="fas fa-arrow-left"></i></span>
+    <span>Back to Promotions</span>
+</a>
+{% endblock %}

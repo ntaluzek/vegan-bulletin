@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ news.title }} - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+        <li><a href="{% url 'bulletin:home' %}">Home</a></li>
+        <li><a href="{% url 'bulletin:news_list' %}">News</a></li>
+        <li class="is-active"><a href="#" aria-current="page">{{ news.title|truncatewords:5 }}</a></li>
+    </ul>
+</nav>
+
+<div class="box">
+    <h1 class="title">{{ news.title }}</h1>
+
+    <p class="subtitle is-6">
+        <span class="icon-text">
+            <span class="icon"><i class="fas fa-calendar"></i></span>
+            <span>{{ news.published_date|date:"F d, Y" }}</span>
+        </span>
+        {% if news.organization %}
+            <span class="icon-text ml-3">
+                <span class="icon"><i class="fas fa-building"></i></span>
+                <span>{{ news.organization.name }}</span>
+            </span>
+        {% endif %}
+        {% if news.author %}
+            <span class="icon-text ml-3">
+                <span class="icon"><i class="fas fa-user"></i></span>
+                <span>{{ news.author.get_full_name|default:news.author.username }}</span>
+            </span>
+        {% endif %}
+    </p>
+
+    <!-- Images -->
+    {% if news.images.all %}
+    <div class="columns is-multiline mb-4">
+        {% for image in news.images.all %}
+        <div class="column is-one-third">
+            <figure class="image">
+                <img src="{{ image.image.url }}" alt="{{ image.alt_text }}">
+                {% if image.caption %}
+                <figcaption class="has-text-centered is-size-7 mt-2">{{ image.caption }}</figcaption>
+                {% endif %}
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="content">
+        {{ news.content|linebreaks }}
+    </div>
+
+    {% if news.source_url %}
+    <div class="notification is-light">
+        <p>
+            <strong>Source:</strong> <a href="{{ news.source_url }}" target="_blank">{{ news.source_url }}</a>
+        </p>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'bulletin:news_list' %}" class="button is-link">
+    <span class="icon"><i class="fas fa-arrow-left"></i></span>
+    <span>Back to News</span>
+</a>
+{% endblock %}

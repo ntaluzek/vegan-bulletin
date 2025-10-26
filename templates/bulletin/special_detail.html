@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ special.title }} - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+        <li><a href="{% url 'bulletin:home' %}">Home</a></li>
+        <li><a href="{% url 'bulletin:special_list' %}">Specials</a></li>
+        <li class="is-active"><a href="#" aria-current="page">{{ special.title|truncatewords:5 }}</a></li>
+    </ul>
+</nav>
+
+<div class="box">
+    <h1 class="title">{{ special.title }}</h1>
+    <h2 class="subtitle">at {{ special.organization.name }}</h2>
+
+    <p class="subtitle is-6">
+        <span class="icon-text">
+            <span class="icon"><i class="fas fa-calendar"></i></span>
+            <span>{{ special.start_date|date:"F d" }} - {{ special.end_date|date:"F d, Y" }}</span>
+        </span>
+    </p>
+
+    <!-- Images -->
+    {% if special.images.all %}
+    <div class="columns is-multiline mb-4">
+        {% for image in special.images.all %}
+        <div class="column is-one-third">
+            <figure class="image">
+                <img src="{{ image.image.url }}" alt="{{ image.alt_text }}">
+                {% if image.caption %}
+                <figcaption class="has-text-centered is-size-7 mt-2">{{ image.caption }}</figcaption>
+                {% endif %}
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="content">
+        {{ special.description|linebreaks }}
+    </div>
+
+    <!-- Organization Info -->
+    <div class="box has-background-light">
+        <h3 class="title is-5">{{ special.organization.name }}</h3>
+        {% if special.organization.address %}
+        <p>
+            <span class="icon-text">
+                <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                <span>{{ special.organization.address }}, {{ special.organization.city }}, {{ special.organization.state }}</span>
+            </span>
+        </p>
+        {% endif %}
+        {% if special.organization.website %}
+        <p>
+            <a href="{{ special.organization.website }}" target="_blank">Visit Website</a>
+        </p>
+        {% endif %}
+    </div>
+</div>
+
+<a href="{% url 'bulletin:special_list' %}" class="button is-link">
+    <span class="icon"><i class="fas fa-arrow-left"></i></span>
+    <span>Back to Specials</span>
+</a>
+{% endblock %}

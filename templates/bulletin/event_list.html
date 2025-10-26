@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<h1 class="title">Events</h1>
+<p class="subtitle">Upcoming vegan events in {{ CITY_NAME }}</p>
+
+<div class="buttons">
+    {% if show_past %}
+        <a href="{% url 'bulletin:event_list' %}" class="button is-primary">Show Upcoming Only</a>
+    {% else %}
+        <a href="?show_past=true" class="button is-light">Show Past Events</a>
+    {% endif %}
+</div>
+
+{% if events %}
+    {% for event in events %}
+    <div class="box">
+        <article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <h2 class="title is-4">
+                        <a href="{% url 'bulletin:event_detail' event.slug %}">{{ event.title }}</a>
+                    </h2>
+                    <p>
+                        <span class="icon-text">
+                            <span class="icon"><i class="fas fa-calendar-day"></i></span>
+                            <span>
+                                {% if event.is_multiday %}
+                                    {{ event.start_date|date:"M d" }} - {{ event.end_date|date:"M d, Y" }}
+                                {% else %}
+                                    {{ event.start_date|date:"F d, Y" }}
+                                {% endif %}
+                            </span>
+                        </span>
+                        {% if event.start_time %}
+                            <span class="icon-text ml-3">
+                                <span class="icon"><i class="fas fa-clock"></i></span>
+                                <span>{{ event.start_time|time:"g:i A" }}</span>
+                            </span>
+                        {% endif %}
+                        {% if event.venue_name %}
+                            <span class="icon-text ml-3">
+                                <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                                <span>{{ event.venue_name }}</span>
+                            </span>
+                        {% endif %}
+                    </p>
+                    <p>{{ event.summary }}</p>
+                    {% if event.cost %}
+                        <span class="tag is-info">{{ event.cost }}</span>
+                    {% endif %}
+                    <br><br>
+                    <a href="{% url 'bulletin:event_detail' event.slug %}" class="button is-primary is-small">View Details</a>
+                    {% if event.registration_url %}
+                        <a href="{{ event.registration_url }}" target="_blank" class="button is-success is-small">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+    </div>
+    {% endfor %}
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="pagination" role="navigation" aria-label="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if show_past %}&show_past=true{% endif %}" class="pagination-previous">Previous</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if show_past %}&show_past=true{% endif %}" class="pagination-next">Next</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+{% else %}
+    <div class="notification is-info">
+        <p>{% if show_past %}No past events found.{% else %}No upcoming events. Check back soon!{% endif %}</p>
+    </div>
+{% endif %}
+{% endblock %}

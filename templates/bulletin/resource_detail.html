@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ resource.title }} - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="breadcrumbs">
+    <ul>
+        <li><a href="{% url 'bulletin:home' %}">Home</a></li>
+        <li><a href="{% url 'bulletin:resource_list' %}">Resources</a></li>
+        <li class="is-active"><a href="#" aria-current="page">{{ resource.title|truncatewords:5 }}</a></li>
+    </ul>
+</nav>
+
+<div class="box">
+    <h1 class="title">{{ resource.title }}</h1>
+
+    <p class="subtitle is-6">
+        <span class="tag is-info">{{ resource.get_resource_type_display }}</span>
+        <span class="icon-text ml-2">
+            <span class="icon"><i class="fas fa-calendar"></i></span>
+            <span>{{ resource.published_date|date:"F d, Y" }}</span>
+        </span>
+        {% if resource.author %}
+            <span class="icon-text ml-2">
+                <span class="icon"><i class="fas fa-user"></i></span>
+                <span>{{ resource.author.get_full_name|default:resource.author.username }}</span>
+            </span>
+        {% endif %}
+    </p>
+
+    <!-- Images -->
+    {% if resource.images.all %}
+    <div class="columns is-multiline mb-4">
+        {% for image in resource.images.all %}
+        <div class="column is-one-third">
+            <figure class="image">
+                <img src="{{ image.image.url }}" alt="{{ image.alt_text }}">
+                {% if image.caption %}
+                <figcaption class="has-text-centered is-size-7 mt-2">{{ image.caption }}</figcaption>
+                {% endif %}
+            </figure>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Content -->
+    <div class="content">
+        {{ resource.content|linebreaks }}
+    </div>
+
+    <!-- Featured Organizations -->
+    {% if resource.organizations.all %}
+    <div class="box has-background-light">
+        <h3 class="title is-5">Featured Organizations</h3>
+        <div class="content">
+            <ul>
+                {% for org in resource.organizations.all %}
+                <li>
+                    <strong>{{ org.name }}</strong> - {{ org.get_category_display }}
+                    {% if org.website %}
+                        | <a href="{{ org.website }}" target="_blank">Website</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<a href="{% url 'bulletin:resource_list' %}" class="button is-link">
+    <span class="icon"><i class="fas fa-arrow-left"></i></span>
+    <span>Back to Resources</span>
+</a>
+{% endblock %}

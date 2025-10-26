@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}News - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<h1 class="title">News</h1>
+<p class="subtitle">Latest vegan news in {{ CITY_NAME }}</p>
+
+{% if news_list %}
+    {% for news in news_list %}
+    <div class="box">
+        <article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <h2 class="title is-4">
+                        <a href="{% url 'bulletin:news_detail' news.slug %}">{{ news.title }}</a>
+                    </h2>
+                    <p>
+                        <small>
+                            Published {{ news.published_date|date:"F d, Y" }}
+                            {% if news.organization %} | {{ news.organization.name }}{% endif %}
+                            {% if news.author %} | By {{ news.author.get_full_name|default:news.author.username }}{% endif %}
+                        </small>
+                    </p>
+                    <p>{{ news.summary }}</p>
+                    <a href="{% url 'bulletin:news_detail' news.slug %}" class="button is-primary is-small">Read More</a>
+                </div>
+            </div>
+        </article>
+    </div>
+    {% endfor %}
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="pagination" role="navigation" aria-label="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="pagination-previous">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="pagination-next">Last</a>
+        {% endif %}
+
+        <ul class="pagination-list">
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li><a class="pagination-link is-current">{{ num }}</a></li>
+                {% else %}
+                    <li><a href="?page={{ num }}" class="pagination-link">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+{% else %}
+    <div class="notification is-info">
+        <p>No news posts available yet. Check back soon!</p>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Promotions - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<h1 class="title">Active Promotions</h1>
+<p class="subtitle">Current vegan deals and sales in {{ CITY_NAME }}</p>
+
+{% if promotions %}
+    <div class="columns is-multiline">
+        {% for promotion in promotions %}
+        <div class="column is-half">
+            <div class="box">
+                <article class="media">
+                    <div class="media-content">
+                        <div class="content">
+                            <h2 class="title is-5">{{ promotion.title }}</h2>
+                            <p class="subtitle is-6">{{ promotion.organization.name }}</p>
+                            <p>{{ promotion.summary }}</p>
+                            <p class="is-size-7">
+                                <span class="tag is-info">{{ promotion.get_recurrence_type_display }}</span>
+                                {% if promotion.start_time and promotion.end_time %}
+                                    <span class="tag">{{ promotion.start_time|time:"g:i A" }} - {{ promotion.end_time|time:"g:i A" }}</span>
+                                {% endif %}
+                            </p>
+                            <a href="{% url 'bulletin:promotion_detail' promotion.slug %}" class="button is-primary is-small">View Details</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="notification is-info">
+        <p>No active promotions today. Check back soon!</p>
+    </div>
+{% endif %}
+{% endblock %}

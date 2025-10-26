@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Resources - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<h1 class="title">Resources</h1>
+<p class="subtitle">Vegan guides and resources for {{ CITY_NAME }}</p>
+
+{% if resources %}
+    {% for resource in resources %}
+    <div class="box">
+        <article class="media">
+            <div class="media-content">
+                <div class="content">
+                    <h2 class="title is-4">
+                        <a href="{% url 'bulletin:resource_detail' resource.slug %}">{{ resource.title }}</a>
+                    </h2>
+                    <p>
+                        <span class="tag is-info">{{ resource.get_resource_type_display }}</span>
+                        <small class="ml-2">Published {{ resource.published_date|date:"F d, Y" }}</small>
+                    </p>
+                    <p>{{ resource.summary }}</p>
+                    <a href="{% url 'bulletin:resource_detail' resource.slug %}" class="button is-primary is-small">Read More</a>
+                </div>
+            </div>
+        </article>
+    </div>
+    {% endfor %}
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav class="pagination" role="navigation" aria-label="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next</a>
+        {% endif %}
+    </nav>
+    {% endif %}
+{% else %}
+    <div class="notification is-info">
+        <p>No resources available yet. Check back soon!</p>
+    </div>
+{% endif %}
+{% endblock %}

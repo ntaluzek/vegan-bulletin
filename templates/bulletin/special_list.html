@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Specials - {{ CITY_NAME }} Vegan Bulletin{% endblock %}
+
+{% block content %}
+<h1 class="title">Current Specials</h1>
+<p class="subtitle">Limited-time vegan offerings in {{ CITY_NAME }}</p>
+
+{% if specials %}
+    <div class="columns is-multiline">
+        {% for special in specials %}
+        <div class="column is-one-third">
+            <div class="card">
+                {% if special.images.first %}
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                        <img src="{{ special.images.first.image.url }}" alt="{{ special.images.first.alt_text }}">
+                    </figure>
+                </div>
+                {% endif %}
+                <div class="card-content">
+                    <p class="title is-5">{{ special.title }}</p>
+                    <p class="subtitle is-6">{{ special.organization.name }}</p>
+                    <div class="content">
+                        <p>{{ special.summary|truncatewords:20 }}</p>
+                        <p class="is-size-7">
+                            <span class="icon-text">
+                                <span class="icon"><i class="fas fa-calendar"></i></span>
+                                <span>Until {{ special.end_date|date:"M d, Y" }}</span>
+                            </span>
+                        </p>
+                    </div>
+                    <a href="{% url 'bulletin:special_detail' special.slug %}" class="button is-primary is-small is-fullwidth">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="notification is-info">
+        <p>No active specials at the moment. Check back soon!</p>
+    </div>
+{% endif %}
+{% endblock %}

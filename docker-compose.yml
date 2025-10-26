@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: vegan-bulletin
+    command: /app/docker-entrypoint.sh
+    volumes:
+      - ./media:/app/media
+      - ./db.sqlite3:/app/db.sqlite3
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-change-this-in-production}
+      - DEBUG=${DEBUG:-True}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1}
+      - CITY_NAME=${CITY_NAME:-Chicago}
+      - CITY_STATE=${CITY_STATE:-IL}
+      - CITY_TIMEZONE=${CITY_TIMEZONE:-America/Chicago}
+      - CONTACT_EMAIL=${CONTACT_EMAIL:-chicagoveganbulletin@gmail.com}
+      - DATABASE_NAME=${DATABASE_NAME:-db.sqlite3}
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
