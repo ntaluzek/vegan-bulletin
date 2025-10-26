@@ -77,10 +77,22 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Support flexible database paths for different deployment scenarios
+database_path = config('DATABASE_PATH', default='default')
+database_name = config('DATABASE_NAME', default='db.sqlite3')
+
+if database_path == 'default' or database_path == '':
+    # Default: store in project root (BASE_DIR)
+    db_location = BASE_DIR / database_name
+else:
+    # Custom path: use absolute path or relative path as specified
+    from pathlib import Path
+    db_location = Path(database_path) / database_name if not database_path.endswith('.sqlite3') else Path(database_path)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / config('DATABASE_NAME', default='db.sqlite3'),
+        'NAME': db_location,
     }
 }
 
