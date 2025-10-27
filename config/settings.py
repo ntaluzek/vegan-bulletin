@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files efficiently
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,7 +88,6 @@ if database_path == 'default' or database_path == '':
     db_location = BASE_DIR / database_name
 else:
     # Custom path: use absolute path or relative path as specified
-    from pathlib import Path
     db_location = Path(database_path) / database_name if not database_path.endswith('.sqlite3') else Path(database_path)
 
 DATABASES = {
@@ -133,7 +134,17 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Only include STATICFILES_DIRS if the static directory exists and has content
+if os.path.exists(BASE_DIR / 'static') and os.listdir(BASE_DIR / 'static'):
+    STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# WhiteNoise configuration for efficient static file serving
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Media files (User uploaded content)
 MEDIA_URL = 'media/'

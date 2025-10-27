@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
 # Install Python dependencies
 COPY pyproject.toml /app/
 RUN pip install --upgrade pip && \
-    pip install django pillow python-decouple django-recurrence
+    pip install django pillow python-decouple django-recurrence gunicorn whitenoise
 
 # Copy project
 COPY . /app/
