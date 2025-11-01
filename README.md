@@ -46,7 +46,7 @@ vegan-bulletin/
 └── pyproject.toml       # Python dependencies
 ```
 
-## Installation & Setup
+## Installation and Setup
 
 ### Local Development
 
